@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Financeira</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff; /* Fundo branco */
+    margin: 0;
+    padding: 0;
+    text-align: left; /* Alinhamento à esquerda */
+  }
+  .finance-container {
+    background: #ffffff; /* Fundo branco */
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Largura do container reduzida */
+    margin-left: 0; /* Removido a margem automática */
+  }
+  input[type="number"] {
+    width: 100%; /* Largura ajustada para preencher o container */
+    padding: 10px;
+    margin: 5px 0; /* Espaçamento reduzido */
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 10px;
+    width: 100%; 
+  }
+  input[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  .chart-container {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    width: 300px;
+    height: 300px;
+  }
+</style>
+</head>
+<body>
+  <div class="finance-container">
+    <h2>Calculadora Financeira</h2>
+    <form id="financeForm" action="/calcular" method="post">
+      <input type="number" id="income" placeholder="Receita Anual" required>
+      <input type="number" id="expenses" placeholder="Gastos Anuais" required>
+      <input type="submit" value="Calcular">
+    </form>
+  </div>
+  <div class="chart-container">
+    <canvas id="financeChart"></canvas>
+  </div>
+  <p id="balanceReport" style="position: absolute; right: 0; top: 360px;"></p> <!-- Ajuste conforme necessário -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <script>
+    document.getElementById('financeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var income = parseFloat(document.getElementById('income').value);
+      var expenses = parseFloat(document.getElementById('expenses').value);
+      var balance = income - expenses;
+      var balanceStatus = balance >= 0 ? 'Saldo Positivo' : 'Saldo Negativo';
+      var balanceReport = document.getElementById('balanceReport');
+      balanceReport.textContent = balanceStatus + ': ' + balance.toFixed(2);
+      balanceReport.style.color = balance >= 0 ? 'green' : 'red';
+
+      var ctx = document.getElementById('financeChart').getContext('2d');
+      var financeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Receitas', 'Gastos'],
+          datasets: [{
+            label: 'Finanças',
+            data: [income, expenses],
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+              'rgba(75, 192, 192, 1)',
+              'rgba(255,99,132,1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

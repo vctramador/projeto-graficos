@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página de Registro</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e7e7e7;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+  }
+  .register-container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  input[type="email"], input[type="password"], input[type="submit"], input[type="text"] {
+    width: calc(100% - 16px);
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+  }
+  input[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Registro</h2>
+    <form id="registerForm">
+      <input type="text" id="name" placeholder="Digite seu nome" required>
+      <input type="email" id="email" placeholder="Digite seu email" required>
+      <input type="password" id="password" placeholder="Crie uma senha" required>
+      <input type="submit" value="Registrar">
+    </form>
+  </div>
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const password = formData.get('password');
+
+      try {
+        const response = await fetch('http://localhost:3001/registro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, email, password })
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao registrar');
+        }
+
+        const data = await response.json();
+        console.log('Usuário registrado:', data);
+
+        // Redirecionamento
+        window.location.href = 'painel.html';
+      } catch (error) {
+        console.error('Erro ao registrar usuário:', error.message);
+      }
+    });
+  </script>
+</body>
+</html>
